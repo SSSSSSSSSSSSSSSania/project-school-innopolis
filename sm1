@@ -1,0 +1,14 @@
+pragma solidity ^0.4.24;
+contract sm1{
+    event RequessToPasMessage(address ,bytes);
+    function transwerMessage(address, bytes);
+}
+contract cheap{
+    address contracta = 0x3c698c9ccde52ff6721880c6bf284c23cd882327;
+    sm1 sm = sm1(contracta);
+    function GetFunction(address _add, uint _a, uint _b){
+        bytes4 method  = bytes4(keccak256("sum(uint256,uint256)"));
+        bytes memory data = abi.encodeWithSelector(method, _a, _b);
+        sm.transwerMessage(_add, data);
+    }
+}
