@@ -17,11 +17,11 @@ contract sm2{
         if(volid[msg.sender] == true){
             volid[msg.sender] = false;
             bytes32 hash = keccak256(msg.sender, _addre, _data, _trhhash);
-            if(check[hash] == true){
-                check[hash] = false;
+            if(check[hash] == false){
+                check[hash] = true;
                 cnt++;
                 if(cnt==2){
-                    if(_addre.call(_data)==true){
+                    if(_addre.call(_data) == true){
                         MessageSucessfulPassed(_addre,_data);
                     }
                     else{
