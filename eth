@@ -1,0 +1,11 @@
+pragma solidity ^0.4.24;
+
+contract eth{
+    uint a;
+    function sum(uint _i,uint _a){
+        a=_i+_a;
+    }
+    function cout()public view returns(uint){
+        return a;
+    }
+}
