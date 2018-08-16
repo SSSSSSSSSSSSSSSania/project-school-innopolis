@@ -1,1 +1,0 @@
-# project-school-innopolis
