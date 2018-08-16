@@ -9,30 +9,25 @@ contract sm2{
             volid[volidators[i]] = true;
         }
     }
-    
+    uint num = 1;
     event MessageSucessfulPassed(address indexed addre,bytes  byt);
     event MessagePassFail(address indexed ad,bytes by);
     
     function PassMesage (address _addre, bytes _data, bytes32 _trhhash){
-        if(volid[msg.sender] == true){
-            bytes32 hash = keccak256(msg.sender, _addre, _data, _trhhash);
-            if(check[hash] == false){
-                check[hash] = true;
-                hash = keccak256(_addre, _data, _trhhash);
-                cnt[hash]++;
-                if(cnt[hash]==2){
-                    if(_addre.call(_data) == true){
-                        MessageSucessfulPassed(_addre,_data);
-                        return;
-                    }
-                    else{
-                        MessagePassFail(_addre,_data);
-                        return; 
-                    }
-                }
-                else
-                    return;
-            }
+        require(volid[msg.sender] == true);
+        bytes32 hash = keccak256(msg.sender, _addre, _data, _trhhash);
+        require(check[hash] == false);
+        check[hash] = true;
+        hash = keccak256(_addre, _data, _trhhash);
+        cnt[hash]++;
+        require(cnt[hash]==num);
+        if(_addre.call(_data) == true){
+            MessageSucessfulPassed(_addre,_data);
+            return;
+        }
+        else{
+            MessagePassFail(_addre,_data);
+            return; 
         }
     }
 }
