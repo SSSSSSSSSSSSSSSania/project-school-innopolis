@@ -4,9 +4,6 @@ contract sm1{
     mapping (bytes32 => uint) public cnt;
     mapping (address => bool) public volid;
     mapping (bytes32 => bool) public check;
-    //address to;
-    //bytes data; 
-    //address addre;
     uint num = 1;
     
     constructor(address[]volidators){
@@ -24,17 +21,22 @@ contract sm1{
        bytes _data
     );
     
-    function transwerVRS(uint8 _v, bytes32 _r, bytes32 _s) public{
-        RequessToPasVRS(_v, _r, _s);
+    function transwerVRS(uint8[] _V, bytes32[] _R, bytes32[] _S) public{
+        RequessToPasVRS(_V, _R, _S);
     }
     
     event RequessToPasVRS(
-       uint8 _v,
-       bytes32 _r,
-       bytes32 _s
+       uint8[] _V,
+       bytes32[] _R,
+       bytes32[] _S
     );
     
+    uint8[]public V;
+    bytes32[]public R;
+    bytes32[]public S;
+    
     function signMessage(address _to, bytes _data, bytes32 _trhhash, uint8 _v, bytes32 _r, bytes32 _s) returns(address) {
+        //string hashSt = ;
         bytes32 Hash = keccak256(_to, _data, _trhhash);
         address addre = ecrecover(Hash, _v, _r, _s);
         require(volid[addre] == true);
@@ -43,8 +45,12 @@ contract sm1{
         check[hash] = true;
         hash = keccak256(_to, _data, _trhhash);
         cnt[hash]++;
+        V.push(_v);
+        R.push(_r);
+        S.push(_s);
+
         require(cnt[hash]==num);
-        transwerVRS(_v, _r, _s);
+        transwerVRS(V, R, S);
     }
     
 }
