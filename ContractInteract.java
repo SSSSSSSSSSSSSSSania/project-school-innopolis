@@ -1,19 +1,20 @@
 package com.company;
-
+import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.RawTransactionManager;
+import org.web3j.tx.TransactionManager;
 
+import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by ivan on 15.08.18.
- */
-public class Deployer {
-    public static void main(String[] args) throws Exception {
+public class ContractInteract {
+
+    public static void main(String[] args) throws Exception{
+        // write your code here
         Web3j web3 = Web3j.build(new HttpService("https://kovan.infura.io/mew"));
 
 
@@ -34,18 +35,15 @@ public class Deployer {
 
 
         Credentials credentials = Credentials.create(privkey,pubkey);//WalletUtils.loadCredentials("cfvggkrubhcg","MezhBlockchain/keyMetamask.json");
-
-        Sm1 sm1=Sm1.deploy(web3,credentials,big(1),big(200000)).send();
-        System.out.println("sm1:    "+sm1.getContractAddress());
-        List<String> list=new ArrayList<>();
-        list.add("0x7B4B4D811cb805F936854BF9Ea30E6B3b69dDB11");
-        list.add("0x570921b1bc7d749f13a162fb5f1c89e0aaa7aba8");
-        list.add("0xe868b537d601a40244bca72f7a7bf71ecb966dda");
-        Sm2 sm2=Sm2.deploy(web3,credentials,big(1),big(2000000),list).send();
-        System.out.println("sm2:    "+sm2.getContractAddress());
-        String sm1addr="0x3f51400facd6f4e2d04b9d4c9f0ce0012fef4b0f";
-        String sm2addr="0xafd6f3dd885ee964365f891d91733133b6c93017";
-
+        //TransactionManager tm=;
+        //Sum sumc=Sum.deploy(web3,credentials,big(1),big(200000)).send();
+        Sum sumc=Sum.load(contractAddr,web3,credentials,big(1),big(200000));
+        //System.out.println(sumc.getContractAddress());
+        //Sum sumc=Sum.load("",web3,credentials,big(1),big(200000));
+        sumc.setA(big(10)).send();
+        sumc.setB(big(5)).send();
+        System.out.println(sumc.getSum().send().toString());
+        System.out.println(sumc.getSumTwo(big(2)).send().toString());
     }
 
     private static BigInteger big(int i) {
