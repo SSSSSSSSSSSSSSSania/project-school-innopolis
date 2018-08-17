@@ -1,11 +1,50 @@
 pragma solidity ^0.4.11;
 contract sm1{
+
+    mapping (bytes32 => uint) public cnt;
+    mapping (address => bool) public volid;
+    mapping (bytes32 => bool) public check;
+    //address to;
+    //bytes data; 
+    //address addre;
+    uint num = 1;
+    
+    constructor(address[]volidators){
+        for(uint i = 0; i<volidators.length;i++){
+            volid[volidators[i]] = true;
+        }
+    }
+    
+    function transwerMessage(address _to, bytes _data) public{
+        RequessToPasMessage(_to, _data);
+    }
+    
     event RequessToPasMessage(
-        address _eth,
-        bytes _dat
+       address _to,
+       bytes _data
     );
     
-    function transwerMessage(address _a, bytes _b){
-        RequessToPasMessage(_a, _b);
+    function transwerVRS(uint8 _v, bytes32 _r, bytes32 _s) public{
+        RequessToPasVRS(_v, _r, _s);
     }
+    
+    event RequessToPasVRS(
+       uint8 _v,
+       bytes32 _r,
+       bytes32 _s
+    );
+    
+    function signMessage(address _to, bytes _data, bytes32 _trhhash, uint8 _v, bytes32 _r, bytes32 _s) returns(address) {
+        bytes32 Hash = keccak256(_to, _data, _trhhash);
+        address addre = ecrecover(Hash, _v, _r, _s);
+        require(volid[addre] == true);
+        bytes32 hash = keccak256(addre, _to, _data, _trhhash);
+        require(check[hash] == false);
+        check[hash] = true;
+        hash = keccak256(_to, _data, _trhhash);
+        cnt[hash]++;
+        require(cnt[hash]==num);
+        transwerVRS(_v, _r, _s);
+    }
+    
 }
