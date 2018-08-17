@@ -21,14 +21,17 @@ contract sm1{
        bytes _data
     );
     
-    function transwerVRS(uint8[] _V, bytes32[] _R, bytes32[] _S) public{
-        RequessToPasVRS(_V, _R, _S);
+    function transwerVRS(address _to, bytes _data, bytes32 _trhhash, uint8[] _V, bytes32[] _R, bytes32[] _S) public{
+        RequessToPasVRS(_to, _data, _trhhash, _V, _R, _S);
     }
     
     event RequessToPasVRS(
-       uint8[] _V,
-       bytes32[] _R,
-       bytes32[] _S
+        address _to,
+        bytes _data,
+        bytes32 _trhhash,
+        uint8[] _V,
+        bytes32[] _R,
+        bytes32[] _S
     );
     
     uint8[]public V;
@@ -50,7 +53,7 @@ contract sm1{
         S.push(_s);
 
         require(cnt[hash]==num);
-        transwerVRS(V, R, S);
+        transwerVRS(_to, _data, _trhhash, V, R, S);
     }
     
 }
