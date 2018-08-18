@@ -4,53 +4,65 @@ contract sm2{
     mapping (bytes32 => uint) public cnt;
     mapping (address => bool) public volid;
     mapping (bytes32 => bool) public check;
-    uint num = 1;
-    uint tm;
+    uint num = 2;
+    address addrRecov;
     constructor(address[]volidators){
         for(uint i = 0; i<volidators.length;i++){
             volid[volidators[i]] = true;
         }
     }
     
-    function PassMesage (address _addre, bytes _data)private{
-        if(_addre.call(_data) == true){
-            MessageSucessfulPassed(_addre,_data);
-            return;
-            tm=0;
-        }
-        else{
-            MessagePassFail(_addre,_data);
-            return; 
-            tm=0;
-        }
-    }
-    event MessageSucessfulPassed(address indexed addre,bytes  byt);
-    event MessagePassFail(address indexed ad,bytes by);
-    address addrRecov;
     
-    function passSignaturesFromCheap(address _addre, bytes _data, bytes32 _trhhash, uint8[] _v, bytes32[] _r, bytes32[] _s){
-        for( tm = 0; tm < num; tm++){
-            addrRecov = ecrecover(keccak256(_addre,_data,_trhhash),_v[tm],_r[tm],_s[tm]);   
-            require(volid[addrRecov] == true);
-            bytes32 hash = keccak256(addrRecov, _addre, _data, _trhhash);
-            require(check[hash] == false);
-            check[hash] = true;
-            hash = keccak256(_addre, _data, _trhhash);
-            cnt[hash]++;
-            require(cnt[hash]==num);
-        }
-        if(tm==num){
-            PassMesage(_addre,_data);
-        }
-    }
+    
+    
+    
     
     
     function transwerMessage(address _to, bytes _data) public{
         RequessToPasMessage(_to, _data);
     }
-    
     event RequessToPasMessage(
-       address _to,
-       bytes _data
+        address _to,
+        bytes _data
     );
+    
+    
+    
+    
+    
+    
+    
+
+    function PassSignatureFromCheap (address _to, bytes _data, bytes32 _trhhash, uint8[] _v, bytes32[] _r, bytes32[] _s){
+        for(uint i = 0; i < num; i++){
+            addrRecov = ecrecover(keccak256(_to, _data, _trhhash), _v[i], _r[i], _s[i]);
+            require(volid[addrRecov] == true);
+            bytes32 hash = keccak256(addrRecov, _to, _data, _trhhash);
+            if(check[hash] == false){
+                check[hash] = true;
+                hash = keccak256(_to, _data, _trhhash);
+                cnt[hash]++;
+                if(cnt[hash]==2){
+                    if(_to.call(_data) == true){
+                        MessageSucessfulPassed(_to, _data);
+                        return;
+                    }
+                    else{
+                        MessagePassFail(_to, _data);
+                        return; 
+                    }
+                }
+            }
+        }
+    }
+    
+    event MessageSucessfulPassed(
+        address indexed addre,
+        bytes  byt
+    );
+    event MessagePassFail(
+        address indexed ad,
+        bytes by
+    );
+    
 }
