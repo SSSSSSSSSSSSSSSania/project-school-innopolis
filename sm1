@@ -51,7 +51,8 @@ contract sm1{
         V.push(_v);
         R.push(_r);
         S.push(_s);
-        require(cnt[hash]==num);
-        transwerVRS(_to, _data, _trhhash, V, R, S);
+        if(cnt[hash]==num){
+            transwerVRS(_to, _data, _trhhash, V, R, S);
+        }
     }
 }
