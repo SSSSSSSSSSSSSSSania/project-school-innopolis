@@ -4,11 +4,23 @@ contract sm1{
     function transwerMessage(address, bytes);
 }
 contract cheap{
-    address contracta = 0x9c701e1f748fcae5d83cdbcbfc545d7f8a33f1f5;
+    address contracta;
+     function getAddress(address _contracta){
+        contracta = _contracta;
+    }
+    
     sm1 sm = sm1(contracta);
-    function GetFunction(address _add, uint _a, uint _b){
+    function GetFunction(address _to, uint _a, uint _b){
         bytes4 method  = bytes4(keccak256("sum(uint256,uint256)"));
         bytes memory data = abi.encodeWithSelector(method, _a, _b);
-        sm.transwerMessage(_add, data);
+        sm.transwerMessage(_to, data);
+    }
+    
+    uint a;
+    function sum(uint _i,uint _a){
+        a=_i+_a;
+    }
+    function cout()public view returns(uint){
+        return a;
     }
 }
