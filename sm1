@@ -34,12 +34,12 @@ contract sm1{
         bytes32[] _S
     );
     
+    
     uint8[]public V;
     bytes32[]public R;
     bytes32[]public S;
     
-    function signMessage(address _to, bytes _data, bytes32 _trhhash, uint8 _v, bytes32 _r, bytes32 _s) returns(address) {
-        //string hashSt = ;
+    function signMessage(address _to, bytes _data, bytes32 _trhhash, uint8 _v, bytes32 _r, bytes32 _s) {
         bytes32 Hash = keccak256(_to, _data, _trhhash);
         address addre = ecrecover(Hash, _v, _r, _s);
         require(volid[addre] == true);
@@ -51,9 +51,7 @@ contract sm1{
         V.push(_v);
         R.push(_r);
         S.push(_s);
-
         require(cnt[hash]==num);
         transwerVRS(_to, _data, _trhhash, V, R, S);
     }
-    
 }
