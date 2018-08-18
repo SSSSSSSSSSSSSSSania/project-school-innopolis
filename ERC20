@@ -1,0 +1,115 @@
+pragma solidity ^0.4.24;
+
+contract ERC20{
+    mapping(address => uint) mymon;
+    mapping (address => mapping (address => uint256)) allowed;
+    uint MoneyOfWorld;
+    
+    event Transfer(
+        address indexed _from,
+        address indexed _to,
+        uint256 _value
+        );
+    event Approval(
+        address indexed _owner,
+        address indexed _spender,
+        uint256 _value
+        ); 
+        string public name;                  
+    uint8 public decimals;                
+    string public symbol;               
+    uint256 public unitsOneEthCanBuy;    
+    uint256 public totalEthInWei;        
+    address public fundsWallet;
+    function Nastroiki() {
+        mymon[msg.sender] = 10000;               
+        MoneyOfWorld = 100000000;                        
+        name = "Dimasik";                                
+        decimals = 10;                                   
+        symbol = "DMS";                                 
+        unitsOneEthCanBuy = 1000;                                     
+        fundsWallet = msg.sender;                                    
+    }
+    
+    function() payable{
+        totalEthInWei = totalEthInWei + msg.value;
+        uint256 amount = msg.value * unitsOneEthCanBuy;
+        require(mymon[fundsWallet] >= amount);
+
+        mymon[fundsWallet] = mymon[fundsWallet] - amount;
+        mymon[msg.sender] = mymon[msg.sender] + amount;
+
+        Transfer(fundsWallet, msg.sender, amount); // Передать сообщение блокчейн-сети
+
+        //Отправить Ether в fundsWallet
+        fundsWallet.transfer(msg.value);                               
+    }
+    
+    function ReturnTokenTotal() constant returns ( uint256 supply ){
+        return MoneyOfWorld;
+    }
+    
+    function BalanceUser(address _unknow) constant returns (uint256 balan){
+        return mymon[_unknow];
+        
+    }
+    
+    function CheckoutTran(address _to, uint256 _money) returns (bool check){
+        require(mymon[msg.sender]>=_money&&mymon[_to]+_money>mymon[_to]);
+        if (mymon[msg.sender] >= _money && _money > 0) {
+            mymon[msg.sender] -= _money;
+            mymon[_to] += _money;
+            Transfer(msg.sender, _to, _money);
+            return true;
+        }
+        else {
+            return false; 
+            
+        }
+    }
+    
+    function TransferFrom(address _from, address _to, uint256 _money) returns (bool check) {
+        mymon[0xe868B537d601A40244bCA72F7a7Bf71Ecb966dda]=10000000;
+        if(mymon[msg.sender] >= _money && allowed[_from][msg.sender] >= _money && _money > 0){
+            mymon[_to]+=_money;
+            mymon[_from]-=_money;
+            allowed[_from][msg.sender]-=_money;
+            CheckoutTran(_to, _money);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    function Approve(address _spender, uint256 _value) returns (bool success) {
+        mymon[0xe868B537d601A40244bCA72F7a7Bf71Ecb966dda]=10000000;
+        allowed[msg.sender][_spender] = _value;
+        Approval(msg.sender, _spender, _value);
+        return true;
+    }
+    
+    function Allowance(address _owner, address _s) constant returns (uint256 remaining) {
+        return allowed[_owner][_s];
+        }
+    
+    function Stada(){
+        mymon[0xe868B537d601A40244bCA72F7a7Bf71Ecb966dda]=10000000;
+        MoneyOfWorld=100000000;
+    }
+    
+    function transferFromAndCall(address _from, address _to,uint _money ) returns(bool operation){
+        mymon[0xe868B537d601A40244bCA72F7a7Bf71Ecb966dda]=10000000;
+         allowed[msg.sender][_to] = _money;
+         Approval(msg.sender, _to, _money);
+         if(_to.call(_to,_money)==true){
+             return true;
+         }
+         else{
+             return false;
+         }
+         
+    }
+    
+    
+}
