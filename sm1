@@ -35,13 +35,14 @@ contract sm1{
         }
     }
     event MessageSucessfulPassed(
-        address indexed addre,
-        bytes  byt
+        address indexed to,
+        bytes  data
     );
     event MessagePassFail(
-        address indexed ad,
-        bytes by
+        address indexed to,
+        bytes data
     );
+    
     
     
     
