@@ -1,9 +1,9 @@
 pragma solidity ^0.4.11;
 contract sm1{
 
-    mapping (bytes32 => uint) public cnt;
-    mapping (address => bool) public volid;
-    mapping (bytes32 => bool) public check;
+    mapping (bytes32 => uint) cnt;
+    mapping (address => bool) volid;
+    mapping (bytes32 => bool) check;
     uint num = 2;
     address addrRecov;
     uint8[]public V;
