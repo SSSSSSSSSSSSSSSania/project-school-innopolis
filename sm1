@@ -18,10 +18,10 @@ contract sm1{
     function PassMesage (address _to, bytes _data, bytes32 _trhhash){
         if(volid[msg.sender] == true){
             volid[msg.sender] = false;
-            bytes32 hash = keccak256(msg.sender, _to, _data, _trhhash);
+            bytes32 hash = keccak256(abi.encodePacked(msg.sender, _to, _data, _trhhash));
             if(check[hash] == false){
                 check[hash] = true;
-                hash = keccak256(_to, _data, _trhhash);
+                hash = keccak256(abi.encodePacked(_to, _data, _trhhash));
                 cnt[hash]++;
                 if(cnt[hash] == num){
                     if(_to.call(_data) == true){
@@ -60,13 +60,13 @@ contract sm1{
        bytes _data
     );
     
-    function signMessage(address _to, bytes _data, bytes32 _trhhash, uint8 _v, bytes32 _r, bytes32 _s) {
-        addrRecov = ecrecover(keccak256(_to, _data, _trhhash), _v, _r, _s);
+    function signMessage(address _to, bytes _data, bytes32 _trhhash, uint8 _v, bytes32 _r, bytes32 _s)public {
+        addrRecov = ecrecover(keccak256(abi.encodePacked(_to, _data, _trhhash)), _v, _r, _s);
         require(volid[addrRecov] == true);
-        bytes32 hash = keccak256(addrRecov, _to, _data, _trhhash);
+        bytes32 hash = keccak256(abi.encodePacked(addrRecov, _to, _data, _trhhash));
         require(check[hash] == false);
         check[hash] = true;
-        hash = keccak256(_to, _data, _trhhash);
+        hash = keccak256(abi.encodePacked(_to, _data, _trhhash));
         cnt[hash]++;
         V.push(_v);
         R.push(_r);
