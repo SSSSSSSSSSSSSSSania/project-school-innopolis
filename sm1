@@ -4,15 +4,21 @@ contract sm1{
     mapping (bytes32 => uint) cnt;
     mapping (address => bool) volid;
     mapping (bytes32 => bool) check;
-    uint num = 2;
+    uint num;
     address addrRecov;
     uint8[]public V;
     bytes32[]public R;
     bytes32[]public S;
-    constructor(address[]volidators){
-        for(uint i = 0; i<volidators.length;i++){
+    constructor(/*address[]volidators*/ uint _num){
+        /* for(uint i = 0; i<volidators.length;i++){
             volid[volidators[i]] = true;
-        }
+        }*/
+        num = _num;
+    }
+    
+    function GetValid(address _a){
+        require(volid[msg.sender] == true);
+        volid[_a] = true;
     }
     
     function PassMesage (address _to, bytes _data, bytes32 _trhhash){
