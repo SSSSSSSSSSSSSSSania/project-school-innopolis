@@ -61,7 +61,6 @@ contract sm2{
     
 
     function PassSignatureFromCheap (address _to, bytes _data, bytes32 _trhhash, uint8[] _v, bytes32[] _r, bytes32[] _s){
-        require(validcnt >= num && num > 0);
         for(uint i = 0; i < num; i++){
             addrRecov = ecrecover(keccak256(abi.encodePacked(_to, _data, _trhhash)), _v[i], _r[i], _s[i]);
             require(volid[addrRecov] == true);
