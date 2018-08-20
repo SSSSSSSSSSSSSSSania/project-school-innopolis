@@ -4,7 +4,7 @@ contract sm2{
     mapping (bytes32 => uint) cnt;
     mapping (address => bool) volid;
     mapping (bytes32 => bool) check;
-    uint num = 2;
+    uint num;
     address addrRecov;
     constructor(uint _num){
         num = _num;
@@ -40,7 +40,7 @@ contract sm2{
                 check[hash] = true;
                 hash = keccak256(abi.encodePacked(_to, _data, _trhhash));
                 cnt[hash]++;
-                if(cnt[hash]==2){
+                if(cnt[hash] == num){
                     if(_to.call(_data) == true){
                         MessageSucessfulPassed(_to, _data);
                         return;
