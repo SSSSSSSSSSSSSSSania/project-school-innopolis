@@ -1,6 +1,6 @@
 из cheap в eth:
 	1 вызываешь getAdress из cheap (address _contracta)
-	2 вызываешь GetFunction из cheap (address _to uint _a uint _b)
+	2 вызываешь GetFunction из cheap (uint _a uint _b)
 	3 ловишь RequessToPasMessage из sm1 (_to _data)
 	4 вызываешь signMessage из sm1 (address _to bytes _data bytes32 _trhhash uint8 _v bytes32 _r bytes32 _s)
 	5 ловишь RequessToPasVRS из sm1 (address _to bytes _data)
