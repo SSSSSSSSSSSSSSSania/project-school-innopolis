@@ -6,16 +6,14 @@ contract sm2{
     mapping (bytes32 => bool) check;
     uint num = 2;
     address addrRecov;
-    constructor(address[]volidators){
-        for(uint i = 0; i<volidators.length;i++){
-            volid[volidators[i]] = true;
-        }
+    constructor(uint _num){
+        num = _num;
     }
     
-    
-    
-    
-    
+     function GetValid(address _a){
+        require(volid[msg.sender] == true);
+        volid[_a] = true;
+    }
     
     
     function transwerMessage(address _to, bytes _data) public{
