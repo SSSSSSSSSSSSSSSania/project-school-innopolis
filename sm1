@@ -85,6 +85,12 @@ contract sm1{
     
     
     
+    
+    
+    
+    
+    
+    
     function transwerMessage(address _to, bytes _data) public{
         RequessToPasMessage(_to, _data);
     }
