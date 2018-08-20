@@ -6,9 +6,10 @@ contract sm1{
     mapping (bytes32 => bool) check;
     uint num;
     address addrRecov;
-    uint8[]public V;
-    bytes32[]public R;
-    bytes32[]public S;
+    mapping(bytes32 => uint8[])public V;
+    mapping(bytes32 => bytes32[])public R;
+    mapping(bytes32 => bytes32[])public S;
+
     constructor(/*address[]volidators*/ uint _num){
         /* for(uint i = 0; i<volidators.length;i++){
             volid[volidators[i]] = true;
@@ -23,7 +24,6 @@ contract sm1{
     
     function PassMesage (address _to, bytes _data, bytes32 _trhhash){
         if(volid[msg.sender] == true){
-            volid[msg.sender] = false;
             bytes32 hash = keccak256(abi.encodePacked(msg.sender, _to, _data, _trhhash));
             if(check[hash] == false){
                 check[hash] = true;
@@ -74,11 +74,11 @@ contract sm1{
         check[hash] = true;
         hash = keccak256(abi.encodePacked(_to, _data, _trhhash));
         cnt[hash]++;
-        V.push(_v);
-        R.push(_r);
-        S.push(_s);
+        V[hash].push(_v);
+        R[hash].push(_r);
+        S[hash].push(_s);
         if(cnt[hash] == num){
-            transwerVRS(_to, _data, _trhhash, V, R, S);
+            transwerVRS(_to, _data, _trhhash, V[hash], R[hash], S[hash]);
         }
     }
     function transwerVRS(address _to, bytes _data, bytes32 _trhhash, uint8[] _V, bytes32[] _R, bytes32[] _S) public{
