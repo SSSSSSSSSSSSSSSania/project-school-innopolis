@@ -6,18 +6,25 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ivan on 15.08.18.
  */
 public class Deployer {
     public static void main(String[] args) throws Exception {
-        Web3j web3 = Web3j.build(new HttpService("https://kovan.infura.io/mew"));
+        ConsoleMessager cm=new ConsoleMessager();
+        cm.open("Loading");
+        cm.cont("Starting WEB3j...(1/2)");
+        Web3j web3c = Web3j.build(new HttpService("https://kovan.infura.io/mew"));
+        cm.cont("Starting WEB3j...(2/2)");
+        Web3j web3e = Web3j.build(new HttpService("https://kovan.infura.io/mew"));
+        cm.cont("Generating keys...");
 
 
-        String contractAddr="0x23b79cc0a7eaecb6b901f1777093af52709c6baa";
+        //String sm1addr="0x16039e45f59c46507ba4c1c8a40e829af281256a";
+        //String sm2addr="0x1286470032cc2729774f5cf966770b450825f104";
+
+
         String privkey="8e1a2ec8d8e729183e028207c068ec9a4655512017e456b301a18d5bbc350775";
         String pubkey="";
 
@@ -32,20 +39,32 @@ public class Deployer {
 
 
 
-
-        Credentials credentials = Credentials.create(privkey,pubkey);//WalletUtils.loadCredentials("cfvggkrubhcg","MezhBlockchain/keyMetamask.json");
-
-        Sm1 sm1=Sm1.deploy(web3,credentials,big(1),big(200000)).send();
-        System.out.println("sm1:    "+sm1.getContractAddress());
-        List<String> list=new ArrayList<>();
-        list.add("0x7B4B4D811cb805F936854BF9Ea30E6B3b69dDB11");
-        list.add("0x570921b1bc7d749f13a162fb5f1c89e0aaa7aba8");
-        list.add("0xe868b537d601a40244bca72f7a7bf71ecb966dda");
-        Sm2 sm2=Sm2.deploy(web3,credentials,big(1),big(2000000),list).send();
-        System.out.println("sm2:    "+sm2.getContractAddress());
-        String sm1addr="0x3f51400facd6f4e2d04b9d4c9f0ce0012fef4b0f";
-        String sm2addr="0xafd6f3dd885ee964365f891d91733133b6c93017";
-
+        cm.cont("Loading wallet...");
+        Credentials credentials = Credentials.create(privkey,pubkey);
+        cm.cont("Ready!");
+        cm.close();
+        cm.open("Deploy");
+        cm.cont("Deploying begins!");
+        cm.cont("Deploying cheap...(1/4)");
+        Cheap cheap = Cheap.deploy(web3c,credentials,big(1),big(2000000)).send();
+        cm.cont("cheap address",cheap.getContractAddress());
+        cm.cont("Deploying sm1...(2/4)");
+        Sm1 sm1 = Sm1.deploy(web3c,credentials,big(1),big(2000000),big(1)).send();
+        cm.cont("sm1 address",sm1.getContractAddress());
+        cm.cont("Deploying sm2...(3/4)");
+        Sm2 sm2 = Sm2.deploy(web3e,credentials,big(1),big(2000000),big(1)).send();
+        cm.cont("sm2 address",sm2.getContractAddress());
+        cm.cont("Deploying eth...(4/4)");
+        Eth eth = Eth.deploy(web3e,credentials,big(1),big(2000000)).send();
+        cm.cont("eth address",eth.getContractAddress());
+        cm.cont("OK!");
+        cm.close();
+        cm.open("Contract addresses");
+        cm.cont("cheap",cheap.getContractAddress());
+        cm.cont("sm1",sm1.getContractAddress());
+        cm.cont("sm2",sm2.getContractAddress());
+        cm.cont("eth",eth.getContractAddress());
+        cm.close();
     }
 
     private static BigInteger big(int i) {
