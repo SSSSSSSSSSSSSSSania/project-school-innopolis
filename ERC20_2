@@ -64,6 +64,9 @@ library SafeMath {
 }
 
 
+pragma solidity ^0.4.4;
+
+import "browser/SafeMath.sol";
 interface Nio{
     
     
@@ -129,15 +132,11 @@ contract Tokes {
     
     
     
-    constructor(){
+    constructor(uint _money){
     owner=msg.sender;
+    mint(msg.sender,_money);
     }
     
-    
-    // Nio additionalContract;
-    // function setAddItionalContract(address _additioC){
-    //     additionalContract=Nio(_additioC);
-    // }
     address owner;
     
     function transferAndCall( address _from,address _to, uint _money, bytes _data)returns(bool success){
@@ -154,15 +153,9 @@ contract Tokes {
         transferAndCall(_from,_to,_amount,"");
     }
     
-    function setPermitionToMint(){
-        allowedToMint=0xe868b537d601a40244bca727a7bf71ecb966dda;//адресс вспомогательного контракта
+    function mint( address _to, uint _newmoney) private {
         
-    }
-    address allowedToMint;
-    
-    function mint( address _to, uint _newmoney){
-        
-        require( allowedToMint==msg.sender);
+        require( owner==msg.sender);
         
         totalMoney=totalMoney.add(_newmoney);
         
