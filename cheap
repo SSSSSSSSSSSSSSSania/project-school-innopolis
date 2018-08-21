@@ -4,12 +4,13 @@ contract sm1{
     function transwerMessage(address, bytes);
 }
 contract cheap{
+    sm1 sm;
     address contracta;
     function getAddress(address _contracta){
         contracta = _contracta;
+        sm = sm1(contracta);
     }
     
-    sm1 sm = sm1(contracta);
     function GetFunction(address _to, uint _a, uint _b){
         bytes4 method  = bytes4(keccak256("sum(uint256,uint256)"));
         bytes memory data = abi.encodeWithSelector(method, _a, _b);
