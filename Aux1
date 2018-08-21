@@ -1,0 +1,50 @@
+pragma solidity ^0.4.24;
+contract sm1{
+    event RequessToPasMessage(address ,bytes);
+    function transwerMessage(address, bytes);
+}
+
+contract ERC20{
+    function burn(uint);
+    function mint(address, uint);
+    function balanceOf(address) returns(uint);
+}
+
+contract aux1{
+    address owner;
+    constructor(){
+        owner = msg.sender;
+    }
+    sm1 sm;
+    ERC20 erc20;
+    address contracta;
+    address erc;
+    address to;
+    function setSm1(address _contracta){
+        contracta = _contracta;
+        sm = sm1(contracta);
+    }
+    function setErc20(address _erc){
+        erc = _erc;
+        erc20 = ERC20(erc);
+    }
+    function setAux(address _to){
+        require(msg.sender == owner);
+        to = _to;
+    }
+
+    function tokenFallBack(address _from, uint _amount, bytes _data){
+        require(msg.sender == erc);
+        require(erc20.balanceOf(address(this)) >= _amount);
+        bytes4 method  = bytes4(keccak256("passToken(address,uint256)"));
+        bytes memory data = abi.encodeWithSelector(method, _from, _amount);
+        sm.transwerMessage(to, data);
+        erc20.burn(_amount);
+    }
+    
+    
+    
+    function passToken(address _to, uint amount){
+        erc20.mint(_to, amount);
+    }
+}
