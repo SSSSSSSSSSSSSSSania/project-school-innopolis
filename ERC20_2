@@ -107,7 +107,7 @@ contract Tokes {
             monn[_from]=monn[_from].sub(_money);
             if(_from !=_to){allowed[_from][msg.sender]=allowed[_from][msg.sender].sub(_money);}
             Transfer(_from,_to,_money);
-            
+            return true;
         
     }
 
