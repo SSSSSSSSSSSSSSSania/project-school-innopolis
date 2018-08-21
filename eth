@@ -9,10 +9,10 @@ contract eth{
         contracta = _contracta;
     }
     sm2 sm = sm2(contracta);
-    function GetFunction(uint _a, uint _b){
+    function GetFunction(address _to, uint _a, uint _b){
         bytes4 method  = bytes4(keccak256("sum(uint256,uint256)"));
         bytes memory data = abi.encodeWithSelector(method, _a, _b);
-        sm.transwerMessage(contracta, data);
+        sm.transwerMessage(_to, data);
     }
     
     
