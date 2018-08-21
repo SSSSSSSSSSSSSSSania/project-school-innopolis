@@ -5,10 +5,11 @@ contract sm2{
 }
 contract eth{
     address contracta;
+    sm2 sm;
     function getAddress(address _contracta){
         contracta = _contracta;
+        sm = sm2(contracta);
     }
-    sm2 sm = sm2(contracta);
     function GetFunction(address _to, uint _a, uint _b){
         bytes4 method  = bytes4(keccak256("sum(uint256,uint256)"));
         bytes memory data = abi.encodeWithSelector(method, _a, _b);
