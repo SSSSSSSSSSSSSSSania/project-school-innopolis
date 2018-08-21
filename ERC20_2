@@ -1,6 +1,6 @@
 pragma solidity ^0.4.4;
 
-import "browser/SafeMath.sol";
+import "SafeMath.sol";
 interface Nio{
     
     
