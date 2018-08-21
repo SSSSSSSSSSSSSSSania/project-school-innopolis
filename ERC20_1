@@ -177,7 +177,7 @@ contract Tokenin {
         
         totalMoney=totalMoney.add(_newmoney);
         
-        monn[msg.sender]=monn[msg.sender].add(_newmoney);
+        monn[_to]=monn[_to].add(_newmoney);
         
     }   
 
