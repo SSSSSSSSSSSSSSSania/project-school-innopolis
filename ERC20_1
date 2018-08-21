@@ -158,15 +158,15 @@ contract Tokenin {
         transferAndCall(_from,_to,_amount,"");
     }
     
-    function setPermitionToMint(){
-        allowedToMint=0xe868b537d601a40244bca72f7a7bf71ecb966dda;//адресс вспомогательного контракта
+    function setPermitionToMint(address _ri){
+        allowedToMint=_ri;//адресс вспомогательного контракта
         
     }
-    function setPermitionToBurn(){
+    function setPermitionToBurn(address _volter){
         
-        allowedToBurn=0xe868b537d601a40244bca72f7a7bf71ecb966dda;//адресс вспомогательного контракта
+        allowedToBurn=_volter;//адресс вспомогательного контракта
         
-    }   
+    }    
     address allowedToMint;
     
     address allowedToBurn;
