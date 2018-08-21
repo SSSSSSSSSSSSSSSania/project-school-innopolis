@@ -1,0 +1,154 @@
+pragma solidity ^0.4.4;
+
+import "browser/SafeMath.sol";
+interface Nio{
+    
+    
+    
+    function tokenFallBack(address _from,uint _amount, bytes _data);
+    
+    
+}
+contract Tokenin {
+    
+    using SafeMath for uint256;
+    
+    event Transfer(address indexed _from, address indexed _to, uint256 _value);
+    event Approval(address indexed _owner, address indexed _spender, uint256 _value);
+    mapping (address => uint256) monn;
+    mapping (address => mapping (address => uint256)) allowed;
+    
+
+    function transfer(address _to, uint256 _money)returns(bool success) {
+        require (monn[msg.sender]>=_money && _money > 0) ;
+        monn[msg.sender]-=_money;
+        monn[_to]+=_money;
+        Transfer(msg.sender, _to, _money);
+        return true;
+    }
+    
+    function isContract(address _account) internal view returns (bool) {
+        uint256 size;
+        assembly { size := extcodesize(_account) }
+        return size > 0;
+  }
+    
+    function transferFrom(address _from, address _to, uint256 _money)returns(bool success) {
+        //allowed[_from][_from]=monn[_from];
+        require (monn[_from]>=_money && allowance(_from, msg.sender) >= _money && _money > 0) ;
+            monn[_to]=monn[_to].add(_money);
+            monn[_from]=monn[_from].sub(_money);
+            if(_from !=_to){allowed[_from][msg.sender]=allowed[_from][msg.sender].sub(_money);}
+            Transfer(_from,_to,_money);
+            
+        
+    }
+
+    function balanceOf(address _gin)constant returns(uint256 balance) {
+        return monn[_gin];
+    }
+
+    function approve(address _from, uint256 _money)returns(bool success) {
+        allowed[msg.sender][_from]=_money;
+        Approval(msg.sender, _from, _money);
+        return true;
+    }
+
+    function allowance(address _owner, address _spender)constant returns(uint256 remaining) {
+      if(_owner==_spender){
+        return monn[_owner];
+      }
+       return allowed[_owner][_spender];
+    }
+    
+    
+    
+    function burn(uint _amount){
+        require(_amount<=monn[msg.sender]&&msg.sender==allowedToBurn);
+        monn[msg.sender]=monn[msg.sender].sub(_amount);
+        totalMoney=totalMoney.sub(_amount);
+    }
+    
+    
+    constructor(){
+    owner=msg.sender;
+    }
+    
+    
+    // Nio additionalContract;
+    // function setAddItionalContract(address _additioC){
+    //     additionalContract=Nio(_additioC);
+    // }
+    address owner;
+    
+    function transferAndCall( address _from,address _to, uint _money, bytes _data)returns(bool success){
+       transferFrom(_from,_to,_money); 
+       
+       if(isContract(_to)==true){
+       
+       Nio(_to).tokenFallBack(_from, _money, _data);
+       return true;
+       }
+    }
+    
+    function transferAndCall(address _from,address _to, uint _amount)returns(bool success){
+        transferAndCall(_from,_to,_amount,"");
+    }
+    
+    function setPermitionToMint(){
+        allowedToMint=0xe868b537d601a40244bca72f7a7bf71ecb966dda;//адресс вспомогательного контракта
+        
+    }
+    function setPermitionToBurn(){
+        
+        allowedToBurn=0xe868b537d601a40244bca72f7a7bf71ecb966dda;//адресс вспомогательного контракта
+        
+    }   
+    address allowedToMint;
+    
+    address allowedToBurn;
+    
+    function mint( address _to, uint _newmoney){
+        
+        require( allowedToMint==msg.sender);
+        
+        totalMoney=totalMoney.add(_newmoney);
+        
+        monn[msg.sender]=monn[msg.sender].add(_newmoney);
+        
+    }   
+
+    uint256 public totalMoney;
+    string public name;                  
+    uint8 public decimals;               
+    string public symbol;                
+    string public version = 'H1.0'; 
+    uint256 public unitsOneEthCanBuy;     
+    uint256 public totalEthInWei;         
+    address public fundsWallet;       
+    function HashnodeTestCoin() {
+        monn[msg.sender] = 1000;               
+        totalMoney = 1000;                    
+        name = "Dimasika";                        
+        decimals = 10;      
+        symbol = "DMSK";                         
+        unitsOneEthCanBuy = 1;                  
+        fundsWallet = msg.sender;                
+    }
+
+    function() payable{
+        totalEthInWei = totalEthInWei.add( msg.value);
+        uint256 amount = msg.value.mul(unitsOneEthCanBuy);
+        require(monn[fundsWallet] >= amount);
+        monn[fundsWallet] = monn[fundsWallet].sub(amount);
+        monn[msg.sender] = monn[msg.sender].add(amount);
+        Transfer(fundsWallet, msg.sender, amount); 
+        fundsWallet.transfer(msg.value);                               
+    }
+    function approveAndCall(address _spender, uint256 _value, bytes _extraData)returns(bool success) {
+        allowed[msg.sender][_spender] = _value;
+       Approval(msg.sender, _spender, _value);
+                if(!_spender.call(bytes4(bytes32(sha3("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)) { throw; }
+        return true;
+    }
+}
