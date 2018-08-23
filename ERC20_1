@@ -72,7 +72,7 @@ interface Nio{
     
     
 }
-contract Tokenin {
+contract ERC_1 {
     
     using SafeMath for uint256;
     
